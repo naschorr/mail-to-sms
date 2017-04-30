@@ -10,8 +10,38 @@ except ImportError as e:
 
 
 class MailToSMS:
-    """
-        MailToSMS Docstring
+    """MailToSMS
+
+    This module implements a basic api for sending text messages via email using yagmail.
+
+    Requirements:
+        yagmail
+        phonenumbers
+
+    Arguments:
+        number {string|int}: The destination phone number (ex. 5551234567)
+        carrier {string}: The destination phone number's carrier (ex. "att")
+        username {string}: The username for accessing the SMTP server (ex. "username")
+        password {string}: The password for accessing the SMTP server (ex. "password")
+            If using Gmail and 2FA, you may want to use an app password.
+        contents {yagmail contents}: A yagmail friendly contents argument (ex. "This is a message.")
+            See: https://github.com/kootenpv/yagmail#magical-contents
+        kwargs {dict}: A set of optional kwargs for extra configuration.
+            region {string}: The region of the destination phone number. Defaults to "US". (ex. "region": "US")
+                This should only be necessary when using a non international phone number that's not US based.
+                See: https://github.com/daviddrysdale/python-phonenumbers
+            subject {string}: The subject of the email to send (ex. "subject": This is a subject.")
+            yagmail {list}: A list of arguments to send to the yagmail.SMTP() constructor. (ex. "yagmail": ["my.smtp.server.com", "12345"])
+                As of 4/30/17, the args and their defaults (after the username and password) are:
+                    host='smtp.gmail.com', port='587', smtp_starttls=True, smtp_set_debuglevel=0, smtp_skip_login=False, encoding="utf-8"
+                This is unnecessary if you're planning on using the basic Gmail interface, 
+                    in which case you'll just need the username and password.
+                See: https://github.com/kootenpv/yagmail/blob/master/yagmail/yagmail.py#L49
+
+    Examples:
+        MailToSMS(5551234567, "att", "username@gmail.com", "password", "contents string!")
+        MailToSMS(5551234567, "att", "username@gmail.com", "password", ["contents line one", "contents line two"], subject="subject string!")
+        MailToSMS(5551234567, "att", "username@gmail.com", "password", "contents string!", yagmail=["smtp.gmail.com", "587"])
     """
 
     ## Config
@@ -20,6 +50,7 @@ class MailToSMS:
     CARRIER_KEY = "carrier"
     SMS_KEY = "sms"
     MMS_KEY = "mms"
+    DEFAULT_REGION = "US"
 
 
     def __init__(self, number, carrier, username, password, contents, **kwargs):
@@ -29,7 +60,7 @@ class MailToSMS:
         if(not self.gateways):
             return
 
-        number = self.validate_number(number, kwargs.get("region", "US"))
+        number = self.validate_number(number, kwargs.get("region", self.static.DEFAULT_REGION))
         carrier = self.validate_carrier(carrier)
         if(not number or not carrier):
             return
@@ -37,6 +68,9 @@ class MailToSMS:
         gateway = self.get_gateway(carrier)
         if(not gateway):
             return
+
+        ## Prepare the args for yagmail
+        yagmail_args = kwargs.get("yagmail", [])
 
         ## Prepare kwargs for yagmail
         yagmail_kwargs = {}
@@ -47,7 +81,7 @@ class MailToSMS:
 
         ## Init the yagmail connection
         try:
-            connection = yagmail.SMTP(username, password)
+            connection = yagmail.SMTP(username, password, *yagmail_args)
         except Exception as e:
             ## You might want to look into using an app password for this.
             print("Unhandled error creating yagmail connection.\nSee the following error text:", e)
@@ -110,6 +144,7 @@ class MailToSMS:
                     return gateway[self.static.MMS_KEY]
                 else:
                     print("{0} doesn't have a SMS or MMS gateway defined.".format(carrier))
+                    return ""
         else:
             print("{0} doesn't have any valid gateways.".format(carrier))   # This shouldn't happen.
             return ""

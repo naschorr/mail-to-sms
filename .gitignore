@@ -5,6 +5,9 @@ pip-selfcheck.json
 # Ignore .pyc files
 *.pyc
 
+# Ignore credentials
+*credentials*
+
 # Ignore these directories
 bin/
 include/
