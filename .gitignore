@@ -1,0 +1,28 @@
+# Ignore the pip-selfcheck, allegedly it's the result of 
+# something weird happening when you run pip in a VM?
+pip-selfcheck.json
+
+# Ignore .pyc files
+*.pyc
+
+# Ignore these directories
+bin/
+include/
+lib/
+local/
+tmp/
+
+Include/
+Lib/
+Scripts/
+tcl/
+
+# Ignore backups
+*bkup
+
+# Ignore gitattributes
+.gitattributes
+
+# Ignore sublime project files
+*.sublime-project
+*.sublime-workspace

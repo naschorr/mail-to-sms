@@ -1,0 +1,10 @@
+{
+	"_comment": "See https://en.wikipedia.org/wiki/SMS_gateway",
+	"gateways": [
+		{
+			"carrier": "att",
+			"sms": "txt.att.net",
+			"mms": "mms.att.net"
+		}
+	]
+}
