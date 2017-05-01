@@ -18,6 +18,8 @@ class MailToSMS:
         yagmail
         phonenumbers
 
+        Install with pip install -r requirements.txt
+
     Arguments:
         number {string|int}: The destination phone number (ex. 5551234567)
         carrier {string}: The destination phone number's carrier (ex. "att")
@@ -26,12 +28,12 @@ class MailToSMS:
             If using Gmail and 2FA, you may want to use an app password.
         contents {yagmail contents}: A yagmail friendly contents argument (ex. "This is a message.")
             See: https://github.com/kootenpv/yagmail#magical-contents
-        kwargs {dict}: A set of optional kwargs for extra configuration.
-            region {string}: The region of the destination phone number. Defaults to "US". (ex. "region": "US")
+        keyword args: A set of optional kwargs for extra configuration.
+            region {string}: The region of the destination phone number. Defaults to "US". (ex. region="US")
                 This should only be necessary when using a non international phone number that's not US based.
                 See: https://github.com/daviddrysdale/python-phonenumbers
-            subject {string}: The subject of the email to send (ex. "subject": This is a subject.")
-            yagmail {list}: A list of arguments to send to the yagmail.SMTP() constructor. (ex. "yagmail": ["my.smtp.server.com", "12345"])
+            subject {string}: The subject of the email to send (ex. subject="This is a subject.")
+            yagmail {list}: A list of arguments to send to the yagmail.SMTP() constructor. (ex. yagmail=["my.smtp.server.com", "12345"])
                 As of 4/30/17, the args and their defaults (after the username and password) are:
                     host='smtp.gmail.com', port='587', smtp_starttls=True, smtp_set_debuglevel=0, smtp_skip_login=False, encoding="utf-8"
                 This is unnecessary if you're planning on using the basic Gmail interface, 
@@ -91,7 +93,7 @@ class MailToSMS:
         try:
             connection.send(**yagmail_kwargs)
         except Exception as e:
-            print("Unhandled error creating sending mail", e)
+            print("Unhandled error sending mail", e)
             return
 
 
