@@ -28,7 +28,7 @@ class MailToSMS:
             If using Gmail and 2FA, you may want to use an app password.
         contents {yagmail contents}: A yagmail friendly contents argument (ex. "This is a message.")
             See: https://github.com/kootenpv/yagmail#magical-contents
-        keyword args: A set of optional kwargs for extra configuration.
+        keyworded args (for extra configuration):
             region {string}: The region of the destination phone number. Defaults to "US". (ex. region="US")
                 This should only be necessary when using a non international phone number that's not US based.
                 See: https://github.com/daviddrysdale/python-phonenumbers
@@ -42,8 +42,9 @@ class MailToSMS:
 
     Examples:
         MailToSMS(5551234567, "att", "username@gmail.com", "password", "contents string!")
-        MailToSMS(5551234567, "att", "username@gmail.com", "password", ["contents line one", "contents line two"], subject="subject string!")
+        MailToSMS("5551234567", "att", "username@gmail.com", "password", ["contents line one", "contents line two"], subject="subject string!")
         MailToSMS(5551234567, "att", "username@gmail.com", "password", "contents string!", yagmail=["smtp.gmail.com", "587"])
+        MailToSMS("5551234567", "att", "username@gmail.com", "password", ["contents string!"], yagmail=["smtp.gmail.com"])
     """
 
     ## Config
