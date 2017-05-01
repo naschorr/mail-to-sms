@@ -2,9 +2,57 @@
 	"_comment": "See https://en.wikipedia.org/wiki/SMS_gateway",
 	"gateways": [
 		{
+			"carrier": "alltel",
+			"sms": "sms.alltelwireless.com",
+			"mms": "mms.alltelwireless.com"
+		},
+		{
 			"carrier": "att",
 			"sms": "txt.att.net",
 			"mms": "mms.att.net"
+		},
+		{
+			"carrier": "boost mobile",
+			"sms": "sms.myboostmobile.com",
+			"mms": "myboostmobile.com"
+		},
+		{
+			"carrier": "cricket wireless",
+			"mms": "mms.cricketwireless.net"
+		},
+		{
+			"carrier": "metropcs",
+			"sms": "mymetropcs.com",
+			"mms": "mymetropcs.com"
+		},
+		{
+			"carrier": "project fi",
+			"mms": "msg.fi.google.com"
+		},
+		{
+			"carrier": "sprint",
+			"sms": "messaging.sprintpcs.com",
+			"mms": "pm.sprint.com"
+		},
+		{
+			"carrier": "tmobile",
+			"sms": "tmomail.net",
+			"mms": "tmomail.net"
+		},
+		{
+			"carrier": "us cellular",
+			"sms": "email.uscc.net",
+			"mms": "mms.uscc.net"
+		},
+		{
+			"carrier": "verizon wireless",
+			"sms": "vtext.com",
+			"mms": "vzwpix.com"
+		},
+		{
+			"carrier": "virgin mobile",
+			"sms": "vmobl.com",
+			"mms": "vmpix.com"
 		}
 	]
 }
