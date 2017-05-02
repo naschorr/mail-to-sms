@@ -42,10 +42,16 @@ class MailToSMS:
                 See: https://github.com/kootenpv/yagmail/blob/master/yagmail/yagmail.py#L49
 
     Examples:
-        MailToSMS(5551234567, "att", "username@gmail.com", "password", "contents string!")
-        MailToSMS("5551234567", "att", "username@gmail.com", "password", ["contents line one", "contents line two"], subject="subject string!")
-        MailToSMS(5551234567, "att", "username@gmail.com", "password", "contents string!", yagmail=["smtp.gmail.com", "587"])
-        MailToSMS("5551234567", "att", "username@gmail.com", "password", ["contents string!"], yagmail=["smtp.gmail.com"])
+        MailToSMS(5551234567, "att", "username@gmail.com", "password", "this is a message")
+
+        MailToSMS("5551234567", "att", "username", "password", ["hello", "world"], subject="hey!")
+
+        MailToSMS(5551234567, "att", "username", "password", "hello world!", yagmail=["smtp.gmail.com", "587"])
+
+        MailToSMS("5551234567", "att", "username@gmail.com", "password", ["line one"], yagmail=["smtp.gmail.com"])
+
+        mail = MailToSMS(5551234567, "att", "username", "password")
+        mail.send("this is a string!")
     """
 
     ## Config
@@ -63,7 +69,7 @@ class MailToSMS:
     DEFAULT_YAGMAIL_ARGS = []
 
 
-    def __init__(self, number, carrier, username, password, contents, **kwargs):
+    def __init__(self, number, carrier, username, password, contents=None, **kwargs):
         self.static = MailToSMS
 
         self.config = {
@@ -74,8 +80,8 @@ class MailToSMS:
         }
 
         ## Prepare the address to send to, return if it couldn't be generated
-        address = self.build_address(number, carrier)
-        if(not address):
+        self.address = self._build_address(number, carrier)
+        if(not self.address):
             return
 
         ## Prepare the passthru args for yagmail
@@ -83,28 +89,19 @@ class MailToSMS:
 
         ## Init the yagmail connection
         try:
-            connection = yagmail.SMTP(username, password, *yagmail_args)
+            self.connection = yagmail.SMTP(username, password, *yagmail_args)
         except Exception as e:
             ## You might want to look into using an app password for this.
             print("Unhandled error creating yagmail connection.", e)
             return
 
-        ## Prepare kwargs for yagmail.send()
-        yagmail_kwargs = {
-            "to": address,
-            "subject": self.config["subject"],
-            "contents": contents
-        }
-
-        ## Send the mail
-        try:
-            connection.send(**yagmail_kwargs)
-        except Exception as e:
-            print("Unhandled error sending mail.", e)
-            return
+        ## Send the mail if the contents arg has been provided, otherwise
+        ## the send() method can be called manually.
+        if(contents):
+            self.send(contents)
 
 
-    def load_gateways(self):
+    def _load_gateways(self):
         with open(self.static.GATEWAYS_JSON_PATH, "r") as fd:
             try:
                 return json.load(fd)[self.static.GATEWAYS_KEY]
@@ -113,7 +110,7 @@ class MailToSMS:
                 return []
 
 
-    def validate_number(self, number, region):
+    def _validate_number(self, number, region):
         try:
             parsed = phonenumbers.parse(number, region)
         except phonenumbers.phonenumberutil.NumberParseException as e:
@@ -132,7 +129,7 @@ class MailToSMS:
                 return False
 
 
-    def validate_carrier(self, carrier):
+    def _validate_carrier(self, carrier):
         for gateway in self.gateways:
             if(gateway[self.static.CARRIER_KEY] == carrier):
                 return True
@@ -141,7 +138,7 @@ class MailToSMS:
             return False
 
 
-    def get_gateway(self, carrier):
+    def _get_gateway(self, carrier):
         for gateway in self.gateways:
             if(gateway[self.static.CARRIER_KEY] == carrier):
                 if(self.config.get("mms")):
@@ -162,24 +159,40 @@ class MailToSMS:
             return None
 
 
-    def build_address(self, number, carrier):
+    def _build_address(self, number, carrier):
         ## Parse the phone number and carrier args into strings
         number = str(number).strip()
         carrier = str(carrier).strip()
 
         ## Load and ensure that there are gateways to check
-        self.gateways = self.load_gateways()
+        self.gateways = self._load_gateways()
         if(not self.gateways):
             return None
 
         ## Validate the phone number and carrier
-        if (not self.validate_number(number, self.config["region"]) or
-            not self.validate_carrier(carrier)):
+        if (not self._validate_number(number, self.config["region"]) or
+            not self._validate_carrier(carrier)):
             return None
 
         ## Get the SMS/MMS gateway for the carrier
-        gateway = self.get_gateway(carrier)
+        gateway = self._get_gateway(carrier)
         if(not gateway):
             return None
 
         return "{0}@{1}".format(number, gateway)
+
+
+    def send(self, contents):
+        ## Prepare kwargs for yagmail.send()
+        yagmail_kwargs = {
+            "to": self.address,
+            "subject": self.config["subject"],
+            "contents": contents
+        }
+
+        ## Send the mail
+        try:
+            self.connection.send(**yagmail_kwargs)
+        except Exception as e:
+            print("Unhandled error sending mail.", e)
+            return
