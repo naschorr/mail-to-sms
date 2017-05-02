@@ -9,7 +9,7 @@ Install with `pip install -r requirements.txt`
 
 ### Arguments
 - **number** {*string|int*}: The destination phone number (ex. `5551234567`).
-- **carrier** {*string*}: The destination phone number's carrier (ex. `"att"`).
+- **carrier** {*string*}: The destination phone number's carrier (ex. `"att"`). Current carriers are include: `alltel`, `att`, `boost mobile`, `cricket wireless`, `metropcs`, `project fi`, `sprint`, `tmobile`, `us cellular`, `verizon wireless`, `virgin mobile`.
 - **username** {*string*}: The username for accessing the SMTP server (ex. `"username"`).
 - **password** {*string*}: The password for accessing the SMTP server (ex. `"password"`). If using Gmail and 2FA, you may want to use an app password.
 - **contents** {[*yagmail contents*](https://github.com/kootenpv/yagmail#magical-contents)}: A yagmail friendly contents argument (ex. `"This is a message."`).
