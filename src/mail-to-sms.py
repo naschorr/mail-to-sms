@@ -32,6 +32,7 @@ class MailToSMS:
             region {string}: The region of the destination phone number. Defaults to "US". (ex. region="US")
                 This should only be necessary when using a non international phone number that's not US based.
                 See: https://github.com/daviddrysdale/python-phonenumbers
+            mms {boolean}: Choose to send a MMS message instead of a SMS message, but will fallback to SMS if MMS isn't present. Defaults to False. (ex. mms=True)
             subject {string}: The subject of the email to send (ex. subject="This is a subject.")
             yagmail {list}: A list of arguments to send to the yagmail.SMTP() constructor. (ex. yagmail=["my.smtp.server.com", "12345"])
                 As of 4/30/17, the args and their defaults (after the username and password) are:
@@ -53,48 +54,53 @@ class MailToSMS:
     CARRIER_KEY = "carrier"
     SMS_KEY = "sms"
     MMS_KEY = "mms"
+    DEFAULT_TO_MMS = False
+    REGION_KEY = "region"
     DEFAULT_REGION = "US"
+    SUBJECT_KEY = "subject"
+    DEFAULT_SUBJECT = None
+    YAGMAIL_KEY = "yagmail"
+    DEFAULT_YAGMAIL_ARGS = []
 
 
     def __init__(self, number, carrier, username, password, contents, **kwargs):
         self.static = MailToSMS
 
-        self.gateways = self.load_gateways()
-        if(not self.gateways):
+        self.config = {
+            "region": kwargs.get(self.static.REGION_KEY, self.static.DEFAULT_REGION),
+            "subject": kwargs.get(self.static.SUBJECT_KEY, self.static.DEFAULT_SUBJECT),
+            "mms": kwargs.get(self.static.MMS_KEY, self.static.DEFAULT_TO_MMS),
+            "yagmail": kwargs.get(self.static.YAGMAIL_KEY, self.static.DEFAULT_YAGMAIL_ARGS)
+        }
+
+        ## Prepare the address to send to, return if it couldn't be generated
+        address = self.build_address(number, carrier)
+        if(not address):
             return
 
-        number = self.validate_number(number, kwargs.get("region", self.static.DEFAULT_REGION))
-        carrier = self.validate_carrier(carrier)
-        if(not number or not carrier):
-            return
-
-        gateway = self.get_gateway(carrier)
-        if(not gateway):
-            return
-
-        ## Prepare the args for yagmail
-        yagmail_args = kwargs.get("yagmail", [])
-
-        ## Prepare kwargs for yagmail
-        yagmail_kwargs = {}
-        yagmail_kwargs["to"] = "{0}@{1}".format(number, gateway)
-        if(kwargs.get("subject", False)):
-            yagmail_kwargs["subject"] = kwargs["subject"]
-        yagmail_kwargs["contents"] = contents
+        ## Prepare the passthru args for yagmail
+        yagmail_args = self.config["yagmail"]
 
         ## Init the yagmail connection
         try:
             connection = yagmail.SMTP(username, password, *yagmail_args)
         except Exception as e:
             ## You might want to look into using an app password for this.
-            print("Unhandled error creating yagmail connection.\nSee the following error text:", e)
+            print("Unhandled error creating yagmail connection.", e)
             return
+
+        ## Prepare kwargs for yagmail.send()
+        yagmail_kwargs = {
+            "to": address,
+            "subject": self.config["subject"],
+            "contents": contents
+        }
 
         ## Send the mail
         try:
             connection.send(**yagmail_kwargs)
         except Exception as e:
-            print("Unhandled error sending mail", e)
+            print("Unhandled error sending mail.", e)
             return
 
 
@@ -103,51 +109,77 @@ class MailToSMS:
             try:
                 return json.load(fd)[self.static.GATEWAYS_KEY]
             except Exception as e:
-                print("Unhandled error loading gateways.json", e)
+                print("Unhandled error loading gateways.json.", e)
                 return []
 
 
     def validate_number(self, number, region):
-        number = str(number)
-
         try:
             parsed = phonenumbers.parse(number, region)
         except phonenumbers.phonenumberutil.NumberParseException as e:
-            print("NumberParseException when parsing the phone number", e)
-            return 0
+            print("NumberParseException when parsing the phone number.", e)
+            return False
         except Exception as e:
-            print("Unhandled error when parsing the phone number", e)
-            return 0
+            print("Unhandled error when parsing the phone number.", e)
+            return False
 
         else:
-            if (phonenumbers.is_possible_number(parsed) and 
+            if (phonenumbers.is_possible_number(parsed) and
                 phonenumbers.is_valid_number(parsed)):
-                return number
+                return True
             else:
-                print("{0} isn't a valid phone number.".format(number))
-                return 0
+                print("'{0}' isn't a valid phone number".format(number))
+                return False
 
 
     def validate_carrier(self, carrier):
         for gateway in self.gateways:
             if(gateway[self.static.CARRIER_KEY] == carrier):
-                return carrier
+                return True
         else:
-            print("{0} isn't a valid carrier.".format(carrier))
-            return ""
+            print("'{0}' isn't a valid carrier.".format(carrier))
+            return False
 
 
     def get_gateway(self, carrier):
         for gateway in self.gateways:
             if(gateway[self.static.CARRIER_KEY] == carrier):
-                ## Return sms gateway if possible, else return the mms gateway
-                if(gateway[self.static.SMS_KEY]):
-                    return gateway[self.static.SMS_KEY]
-                elif(gateway[self.static.MMS_KEY]):
-                    return gateway[self.static.MMS_KEY]
+                if(self.config.get("mms")):
+                    ## Return mms gateway if possible, else return the sms gateway
+                    if(self.static.MMS_KEY in gateway):
+                        return gateway[self.static.MMS_KEY]
+                    elif(self.static.SMS_KEY in gateway):
+                        return gateway[self.static.SMS_KEY]
                 else:
-                    print("{0} doesn't have a SMS or MMS gateway defined.".format(carrier))
-                    return ""
+                    ## Return sms gateway if possible, else return the mms gateway
+                    if(self.static.SMS_KEY in gateway):
+                        return gateway[self.static.SMS_KEY]
+                    elif(self.static.MMS_KEY in gateway):
+                        return gateway[self.static.MMS_KEY]
         else:
-            print("{0} doesn't have any valid gateways.".format(carrier))   # This shouldn't happen.
-            return ""
+            ## This shouldn't happen.
+            print("Carrier '{0}' doesn't have any valid SMS or MMS gateways.".format(carrier))
+            return None
+
+
+    def build_address(self, number, carrier):
+        ## Parse the phone number and carrier args into strings
+        number = str(number).strip()
+        carrier = str(carrier).strip()
+
+        ## Load and ensure that there are gateways to check
+        self.gateways = self.load_gateways()
+        if(not self.gateways):
+            return None
+
+        ## Validate the phone number and carrier
+        if (not self.validate_number(number, self.config["region"]) or
+            not self.validate_carrier(carrier)):
+            return None
+
+        ## Get the SMS/MMS gateway for the carrier
+        gateway = self.get_gateway(carrier)
+        if(not gateway):
+            return None
+
+        return "{0}@{1}".format(number, gateway)
