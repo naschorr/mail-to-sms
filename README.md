@@ -40,3 +40,6 @@ MailToSMS("5551234567", "att", "username@gmail.com", "password", ["line one"], y
 mail = MailToSMS(5551234567, "att", "username", "password")
 mail.send("this is a string!")
 ```
+
+### Note
+I've only been able to test this on AT&T, so I can't guarantee that this works for other carriers. Feedback is appreciated.
