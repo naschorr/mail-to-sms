@@ -195,4 +195,7 @@ class MailToSMS:
             self.connection.send(**yagmail_kwargs)
         except Exception as e:
             print("Unhandled error sending mail.", e)
-            return
+            return False
+        else:
+
+            return True
