@@ -1,4 +1,5 @@
 import json
+import os
 try:
     import yagmail
 except ImportError as e:
@@ -55,7 +56,7 @@ class MailToSMS:
     """
 
     ## Config
-    GATEWAYS_JSON_PATH = "gateways.json"
+    GATEWAYS_JSON_PATH = os.path.join(os.path.dirname(__file__), "gateways.json")
     GATEWAYS_KEY = "gateways"
     CARRIER_KEY = "carrier"
     SMS_KEY = "sms"
@@ -111,6 +112,8 @@ class MailToSMS:
 
 
     def _validate_number(self, number, region):
+        number = str(number).strip()
+
         try:
             parsed = phonenumbers.parse(number, region)
         except phonenumbers.phonenumberutil.NumberParseException as e:
@@ -130,6 +133,8 @@ class MailToSMS:
 
 
     def _validate_carrier(self, carrier):
+        carrier = str(carrier).strip()
+
         for gateway in self.gateways:
             if(gateway[self.static.CARRIER_KEY] == carrier):
                 return True
@@ -160,10 +165,6 @@ class MailToSMS:
 
 
     def _build_address(self, number, carrier):
-        ## Parse the phone number and carrier args into strings
-        number = str(number).strip()
-        carrier = str(carrier).strip()
-
         ## Load and ensure that there are gateways to check
         self.gateways = self._load_gateways()
         if(not self.gateways):
