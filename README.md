@@ -2,8 +2,8 @@
 Programmatically send out text messages via email.
 
 ### Requirements
-- yagmail
-- phonenumbers
+- [yagmail](https://github.com/kootenpv/yagmail)
+- [phonenumbers](https://github.com/daviddrysdale/python-phonenumbers)
 
 Install with `pip install -r requirements.txt`
 
