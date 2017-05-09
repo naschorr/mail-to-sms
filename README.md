@@ -2,8 +2,9 @@
 Programmatically send out text messages via email.
 
 ### Installation
-- `pip install mail_to_sms` and import like any other Python module. Or,
-- `git clone https://github.com/naschorr/mail-to-sms` locally as needed. Make sure to install the requirements with `pip install -r requirements.txt`
+`pip install mail_to_sms` and import like any other Python module. Or,
+
+`git clone https://github.com/naschorr/mail-to-sms` locally as needed. Make sure to install the requirements with `pip install -r requirements.txt`
 
 ### Arguments
 - **number** {*string|int*}: The destination phone number (ex. `5551234567`).
