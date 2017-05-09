@@ -1,11 +1,9 @@
 # mail-to-sms
 Programmatically send out text messages via email.
 
-### Requirements
-- [yagmail](https://github.com/kootenpv/yagmail)
-- [phonenumbers](https://github.com/daviddrysdale/python-phonenumbers)
-
-Install with `pip install -r requirements.txt`
+### Installation
+- `pip install mail_to_sms` and import like any other Python module. Or,
+- `git clone https://github.com/naschorr/mail-to-sms` locally as needed. Make sure to install the requirements with `pip install -r requirements.txt`
 
 ### Arguments
 - **number** {*string|int*}: The destination phone number (ex. `5551234567`).
@@ -20,6 +18,10 @@ Install with `pip install -r requirements.txt`
   - **yagmail** {*list*}: A list of arguments to send to the yagmail.SMTP() constructor. (ex. `yagmail=["my.smtp.server.com", "12345"]`). As of 4/30/17, the args and their defaults (after the username and password) are `host='smtp.gmail.com'`, `port='587'`, `smtp_starttls=True`, `smtp_set_debuglevel=0`, `smtp_skip_login=False`, `encoding="utf-8"`. This is unnecessary if you're planning on using the basic Gmail interface, in which case you'll just need the username and password. This may make more sense if you look at yagmail's SMTP class [here](https://github.com/kootenpv/yagmail/blob/master/yagmail/yagmail.py#L49).
 
 ### Examples
+```
+from mail_to_sms import MailToSMS
+```
+
 ```
 MailToSMS(5551234567, "att", "username@gmail.com", "password", "this is a message")
 ```
@@ -40,6 +42,10 @@ MailToSMS("5551234567", "att", "username@gmail.com", "password", ["line one"], y
 mail = MailToSMS(5551234567, "att", "username", "password")
 mail.send("this is a string!")
 ```
+
+### Requirements
+- [yagmail](https://github.com/kootenpv/yagmail)
+- [phonenumbers](https://github.com/daviddrysdale/python-phonenumbers)
 
 ### Note
 I've only been able to test this on AT&T, so I can't guarantee that this works for other carriers. Feedback is appreciated.
