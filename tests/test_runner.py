@@ -6,8 +6,8 @@ import unittest
 ## Based on: https://github.com/naschorr/electronic-component-label-builder/blob/master/testing/testRunner.py
 
 ## Assumes this file is at /<root>/tests/test_runner.py
-## Then, it just adds the /<root>/src/ directory to the PYTHONPATH so the tests can be run
-sys.path.append(os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2] + ["src"]))
+## Then, it just adds the /<root>/mail_to_sms/ directory to the PYTHONPATH so the tests can be run
+sys.path.append(os.path.sep.join(os.path.realpath(__file__).split(os.path.sep)[:-2] + ["mail_to_sms"]))
 
 import mail_to_sms_test
 

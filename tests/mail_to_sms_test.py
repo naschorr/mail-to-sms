@@ -1,9 +1,11 @@
 import unittest
 from mail_to_sms import MailToSMS
 
+
 class TestMailToSMS(unittest.TestCase):
     def setUp(self):
         self.connection = MailToSMS(None, None, None, None)
+
 
     def test_load_gateways(self):
         pass
