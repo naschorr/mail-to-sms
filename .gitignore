@@ -20,8 +20,12 @@ Lib/
 Scripts/
 tcl/
 
+config/
+
+dist/
+
 # Ignore backups
-*bkup
+*bkup*
 
 # Ignore gitattributes
 .gitattributes

@@ -1,13 +1,8 @@
 import json
 import os
-try:
-    import yagmail
-except ImportError as e:
-    print("Error importing yagmail. Check out https://github.com/kootenpv/yagmail#install for installation.", e)
-try:
-    import phonenumbers
-except ImportError as e:
-    print("Error importing phonenumbers.", e)
+
+import yagmail
+import phonenumbers
 
 
 class MailToSMS:
