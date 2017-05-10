@@ -1,5 +1,7 @@
-# mail-to-sms
+# mail-to-sms 
 Programmatically send out text messages via email.
+
+[![PyPI version](https://badge.fury.io/py/mail_to_sms.svg)](https://badge.fury.io/py/mail_to_sms)
 
 ### Installation
 `pip install mail_to_sms` and import like any other Python module. Or,
