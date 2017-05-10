@@ -22,7 +22,9 @@ tcl/
 
 config/
 
+# Ignore python package supplementals
 dist/
+MANIFEST
 
 # Ignore backups
 *bkup*

@@ -1,0 +1,3 @@
+include README.md LICENSE.txt
+include setup.cfg setup.py
+recursive-include mail_to_sms *.py *.json

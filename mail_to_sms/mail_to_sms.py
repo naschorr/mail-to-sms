@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import json
 import os
 
@@ -9,12 +11,6 @@ class MailToSMS:
     """MailToSMS
 
     This module implements a basic api for sending text messages via email using yagmail.
-
-    Requirements:
-        yagmail
-        phonenumbers
-
-        Install with pip install -r requirements.txt
 
     Arguments:
         number {string|int}: The destination phone number (ex. 5551234567)
@@ -39,6 +35,8 @@ class MailToSMS:
                 See: https://github.com/kootenpv/yagmail/blob/master/yagmail/yagmail.py#L49
 
     Examples:
+        from mail_to_sms import MailToSMS
+
         MailToSMS(5551234567, "att", "username@gmail.com", "password", "this is a message")
 
         MailToSMS("5551234567", "att", "username", "password", ["hello", "world"], subject="hey!")
@@ -49,6 +47,10 @@ class MailToSMS:
 
         mail = MailToSMS(5551234567, "att", "username", "password")
         mail.send("this is a string!")
+
+    Requirements:
+        yagmail
+        phonenumbers
     """
 
     ## Config
