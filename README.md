@@ -15,6 +15,7 @@ Programmatically send out text messages via email.
 - **password** {*string*}: The password for accessing the SMTP server (ex. `"password"`). If using Gmail and 2FA, you may want to use an app password.
 - **contents** {[*yagmail contents*](https://github.com/kootenpv/yagmail#magical-contents)}: A yagmail friendly contents argument (ex. `"This is a message."`).
 - keyworded args (for extra configuration):
+  - **quiet** {*boolean*}: Choose to disable printed statements. Defaults to False. (ex. `quiet=True`)
   - **region** {*string*}: The region of the destination phone number. Defaults to "US". (ex. `region="US"`). This should only be necessary when using a non international phone number that's not US based. See the phonenumbers repo [here](https://github.com/daviddrysdale/python-phonenumbers).
   - **mms** {*boolean*}: Choose to send a MMS message instead of a SMS message, but will fallback to SMS if MMS isn't present. Defaults to False. (ex. `mms=True`)
   - **subject** {*string*}: The subject of the email to send (ex. `subject="This is a subject."`)

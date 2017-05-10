@@ -4,7 +4,30 @@ from mail_to_sms import MailToSMS
 
 class TestMailToSMS(unittest.TestCase):
     def setUp(self):
-        self.connection = MailToSMS(None, None, None, None)
+        self.connection = MailToSMS(None, None, None, None, quiet=True)
+
+
+    def test_print_error(self):
+        testTuples = [
+            ## Output producing inputs
+            (Exception("test"), "", "test"),
+            (Exception("test"), "test message", "test test message"),
+            (None, "test message", "test message"),
+            (Exception("test"), 12345, "test 12345"),
+            (None, True, "True"),
+            ## Non-production inputs
+            ("", "", None),
+            (None, None, None),
+            (None, "", None)
+        ]
+
+        for exception, message, result in testTuples:
+            try:
+                self.assertEqual(self.connection._print_error(exception, message), result)
+            except AssertionError as e:
+                ## Catch the error and dump some useful info, then re-raise it so that the test fails properly
+                print("AssertionError: {0} for args: {1}, {2}, {3}".format(e, exception, message, result))
+                raise AssertionError(e)
 
 
     def test_load_gateways(self):
@@ -100,7 +123,7 @@ class TestMailToSMS(unittest.TestCase):
         do_test(testDicts)
 
         ## Test with mms kwarg
-        self.connection = MailToSMS(None, None, None, None, mms=True)
+        self.connection = MailToSMS(None, None, None, None, mms=True, quiet=True)
         do_test(testDicts)
 
 
