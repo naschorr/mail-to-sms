@@ -26,7 +26,7 @@ def get_version():
 
 
 ## Converts the REAME.md to a .rst file for pypi
-def readme_to_rst():
+def generate_readme_rst(attempts=0):
     ## Assumes pypandoc has installed pandoc. If not, use:
     ## from pypandoc.pandoc_download import download_pandoc
     ## download_pandoc()
@@ -35,25 +35,30 @@ def readme_to_rst():
 
 @click.command()
 @click.option("--pypi", is_flag=True, help="Deploy to the pypi repo in your ~/.pyirc file, rather than testpypi")
-def deploy(pypi):
+@click.option("--no-deploy", "-d", is_flag=True, help="Don't actually deploy to pypi, but do everything else.")
+def deploy(pypi, no_deploy):
     version = get_version()
-    print("Building {0}, pypi={1}".format(version, pypi))
+    print("Building {0}, pypi={1}, no_deploy={2}".format(version, pypi, no_deploy))
     sys.stdout.flush()
 
     ## Build the README.rst
-    readme_to_rst()
+    generate_readme_rst()
 
     ## Assumes that python points to the correct python installation, and that
     ## twine is installed and accessible from the command line.
-    retval = os.system("python setup.py register sdist bdist_wheel")
-    assert retval == 0
-
-    ## Deploy to chosen repo
     if(pypi):
-        retval = os.system("twine upload dist/mail_to_sms-{0}*".format(version))
+        setup_retval = os.system("python setup.py register sdist bdist_wheel")
     else:
-        retval = os.system("twine upload dist/mail_to_sms-{0}* -r testpypi".format(version))
-    assert retval == 0
+        setup_retval = os.system("python setup.py register -r testpypi sdist bdist_wheel")
+    assert setup_retval == 0
+
+    if(not no_deploy):
+        ## Deploy to chosen repo
+        if(pypi):
+            deploy_retval = os.system("twine upload dist/mail_to_sms-{0}*".format(version))
+        else:
+            deploy_retval = os.system("twine upload dist/mail_to_sms-{0}* -r testpypi".format(version))
+        assert deploy_retval == 0
 
     ## Cleanup
     os.remove("README.rst")
