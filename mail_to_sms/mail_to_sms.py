@@ -15,11 +15,16 @@ class MailToSMS:
     Arguments:
         number {string|int}: The destination phone number (ex. 5551234567)
         carrier {string}: The destination phone number's carrier (ex. "att")
-        username {string}: The username for accessing the SMTP server (ex. "username")
-        password {string}: The password for accessing the SMTP server (ex. "password")
+        username {string} [optional]: The username for accessing the SMTP server (ex. "username").
+            If omitted, it'll try to use the username stored in the .yagmail file.
+            See: https://github.com/kootenpv/yagmail#username-and-password
+        password {string} [optional]: The password for accessing the SMTP server (ex. "password").
             If using Gmail and 2FA, you may want to use an app password.
-        contents {yagmail contents}: A yagmail friendly contents argument (ex. "This is a message.")
+            If omitted, it'll try to use yagmail's password in the keyring, otherwise it'll prompt you for the password.
+            See: https://github.com/kootenpv/yagmail#username-and-password
+        contents {yagmail contents} [optional]: A yagmail friendly contents argument (ex. "This is a message."). 
             See: https://github.com/kootenpv/yagmail#magical-contents
+            If omitted, you can manually use MailToSMS's send method.
         keyworded args (for extra configuration):
             quiet {boolean}: Choose to disable printed statements. Defaults to False. (ex. quiet=True)
             region {string}: The region of the destination phone number. Defaults to "US". (ex. region="US")
@@ -72,7 +77,7 @@ class MailToSMS:
     DEFAULT_YAGMAIL_ARGS = []
 
 
-    def __init__(self, number, carrier, username, password, contents=None, **kwargs):
+    def __init__(self, number, carrier, username=None, password=None, contents=None, **kwargs):
         ## Explicitly define the available configs and their defaults (if necessary)
         self.config = {
             "quiet": kwargs.get(self.QUIET_KEY, self.DEFAULT_QUIET),
@@ -89,10 +94,13 @@ class MailToSMS:
 
         ## Prepare the passthru args for yagmail
         yagmail_args = self.config["yagmail"]
+        if(username):
+            yagmail_args.insert(0, username)
+            yagmail_args.insert(1, password)
 
         ## Init the yagmail connection
         try:
-            self.connection = yagmail.SMTP(username, password, *yagmail_args)
+            self.connection = yagmail.SMTP(*yagmail_args)
         except Exception as e:
             ## You might want to look into using an app password for this.
             self._print_error(e, "Unhandled error creating yagmail connection.")
