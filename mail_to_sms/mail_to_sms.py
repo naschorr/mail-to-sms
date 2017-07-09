@@ -56,6 +56,7 @@ class MailToSMS:
     Requirements:
         yagmail
         phonenumbers
+        click (for the CLI)
     """
 
     ## Config

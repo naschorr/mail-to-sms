@@ -50,6 +50,7 @@ mail.send("this is a string!")
 ### Requirements
 - [yagmail](https://github.com/kootenpv/yagmail)
 - [phonenumbers](https://github.com/daviddrysdale/python-phonenumbers)
+- [click](https://github.com/pallets/click) (for the CLI)
 
 ### Note
 I've only been able to test this on AT&T, so I can't guarantee that this works for other carriers. Feedback is appreciated.

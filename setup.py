@@ -1,23 +1,39 @@
-from distutils.core import setup
+from setuptools import setup
 
-setup(
+## Config
+MAJOR = 0
+MINOR = 3
+PATCH = 1
+with open("README.rst") as readme:
+    LONG_DESCRIPTION = readme.read()
+
+## Setuptools config
+paramaters = dict(
     name = "mail_to_sms",
     packages = ["mail_to_sms"],
     package_data = {
-        '': [
+        "": [
             "gateways.json",
         ],
     },
-    version = "0.2.1",
+    version = "{0}.{1}.{2}".format(MAJOR, MINOR, PATCH),
     description = "Programmatically send out text messages via email.",
+    long_description = LONG_DESCRIPTION,
     author = "Nick Schorr",
     author_email = "naschorr@gmail.com",
     url = "https://github.com/naschorr/mail-to-sms",
-    download_url = "https://github.com/naschorr/mail-to-sms/archive/0.2.1.tar.gz",
     install_requires = [
-        "yagmail",
-        "phonenumbers",
+        "keyring >= 10.4",
+        "yagmail >= 0.6",
+        "phonenumbers >= 8.4 ",
+        "click >= 6.7",
     ],
+    entry_points = {
+        "console_scripts": [
+            "mail_to_sms = mail_to_sms.mail_to_sms_cli:main",
+        ],
+    },
+    ## Todo: Add test_suite to the setup
     license = "MIT License",
     keywords = ["sms", "mms", "messaging", "mail", "api"],
     classifiers = [
@@ -34,3 +50,6 @@ setup(
         "Programming Language :: Python :: 3.5"
     ],
 )
+
+## Run the setup
+setup(**paramaters)

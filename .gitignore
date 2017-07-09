@@ -25,6 +25,12 @@ config/
 # Ignore python package supplementals
 dist/
 MANIFEST
+*.egg-info
+build/
+*.rst
+
+# Ignore my notes
+packaging.txt
 
 # Ignore backups
 *bkup*
@@ -35,3 +41,6 @@ MANIFEST
 # Ignore sublime project files
 *.sublime-project
 *.sublime-workspace
+
+# Pandoc files
+pandoc*
