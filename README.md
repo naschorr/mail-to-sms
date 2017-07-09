@@ -47,7 +47,7 @@ mail = MailToSMS(5551234567, "att", "username", "password")
 mail.send("this is a string!")
 ```
 
-## CLI Examples
+### CLI Examples
 Note that you may want to install `mail_to_sms` into your global python's site-packages rather than just a virtualenv if you're planning on using the CLI.
 ```
 > mail_to_sms 5551234567 att "just a test"
