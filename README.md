@@ -68,4 +68,4 @@ Note that you may want to install `mail_to_sms` into your global python's site-p
 - [click](https://github.com/pallets/click) (for the CLI)
 
 ### Note
-I've only been able to test this on AT&T, so I can't guarantee that this works for other carriers. Feedback is appreciated.
+I've only been able to test this on AT&T amd Verizon, so I can't guarantee that this works for other carriers. Feedback is appreciated.
