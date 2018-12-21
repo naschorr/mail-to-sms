@@ -10,7 +10,7 @@ Programmatically send out text messages via email.
 
 ### Arguments
 - **number** {*string|int*}: The destination phone number (ex. `5551234567`).
-- **carrier** {*string*}: The destination phone number's carrier (ex. `"att"`). Current carriers are include: `alltel`, `att`, `boost mobile`, `cricket wireless`, `metropcs`, `project fi`, `sprint`, `tmobile`, `us cellular`, `verizon wireless`, `virgin mobile`.
+- **carrier** {*string*}: The destination phone number's carrier (ex. `"att"`). Current carriers include: `"alltel"`, `"at&t"`, `"att"`, `"boost mobile"`, `"boost"`, `"cricket wireless"`, `"cricket"`, `"metropcs"`, `"project fi"`, `"fi"`, `"sprint"`, `"t-mobile"`, `"t mobile"`, `"tmobile"`, `"us cellular"`, `"verizon wireless"`, `"verizon"`, `"vzw"`, `"virgin mobile"`, and `"virgin"`.
 - **username** {*string*} [optional]: The username for accessing the SMTP server (ex. `"username"`). If omitted, it'll try to use the username stored in the [.yagmail file](https://github.com/kootenpv/yagmail#username-and-password).
 - **password** {*string*} [optional]: The password for accessing the SMTP server (ex. `"password"`). If using Gmail and 2FA, you may want to use an app password. If omitted, it'll try to use [yagmail's password](https://github.com/kootenpv/yagmail#username-and-password) in the keyring, otherwise it'll prompt you for the password.
 - **contents** {[*yagmail contents*](https://github.com/kootenpv/yagmail#magical-contents)} [optional]: A yagmail friendly contents argument (ex. `"This is a message."`). If omitted, MailToSMS's `send()` method can be called manually.
