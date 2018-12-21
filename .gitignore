@@ -44,3 +44,6 @@ packaging.txt
 
 # Pandoc files
 pandoc*
+
+# Venv
+pyvenv.cfg
