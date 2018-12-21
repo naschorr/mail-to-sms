@@ -47,10 +47,25 @@ mail = MailToSMS(5551234567, "att", "username", "password")
 mail.send("this is a string!")
 ```
 
+### CLI Examples
+Note that you may want to install `mail_to_sms` into your global python's site-packages rather than just a virtualenv if you're planning on using the CLI.
+```
+> mail_to_sms 5551234567 att "just a test"
+```
+
+```
+> mail_to_sms 5551234567 "att" "hey, world!" -u "username"
+```
+
+```
+> mail_to_sms "5551234567" att "nice job" -u "username" -p "password"
+```
+
 ### Requirements
+- [keyring](https://github.com/jaraco/keyring)
 - [yagmail](https://github.com/kootenpv/yagmail)
 - [phonenumbers](https://github.com/daviddrysdale/python-phonenumbers)
 - [click](https://github.com/pallets/click) (for the CLI)
 
 ### Note
-I've only been able to test this on AT&T, so I can't guarantee that this works for other carriers. Feedback is appreciated.
+I've only been able to test this on AT&T amd Verizon, so I can't guarantee that this works for other carriers. Feedback is appreciated.
