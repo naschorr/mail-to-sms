@@ -1,16 +1,15 @@
-from __future__ import print_function
-
-## Inspired by https://github.com/kootenpv/yagmail/blob/master/deploy.py
-
 import click
 import sys
 import os
 import re
 import pypandoc as pandoc
 
+import tests.test_runner
 
-## Get current program version from setup.py
+## Inspired by https://github.com/kootenpv/yagmail/blob/master/deploy.py
+
 def get_version():
+    '''Get current program version from setup.py'''
     with open("setup.py") as fd:
         setup = fd.read()
 
@@ -25,8 +24,9 @@ def get_version():
         return "{0}.{1}.{2}".format(major, minor, patch)
 
 
-## Converts the REAME.md to a .rst file for pypi
-def generate_readme_rst(attempts=0):
+def generate_readme_rst():
+    '''Converts the REAME.md to a .rst file for pypi'''
+
     ## Assumes pypandoc has installed pandoc. If not, use:
     ## from pypandoc.pandoc_download import download_pandoc
     ## download_pandoc()
@@ -39,29 +39,42 @@ def generate_readme_rst(attempts=0):
 def deploy(pypi, no_deploy):
     version = get_version()
     print("Building {0}, pypi={1}, no_deploy={2}".format(version, pypi, no_deploy))
-    sys.stdout.flush()
+
+    ## Run tests before anything else happens, and make sure they're passing
+    print("Running tests before continuing deployment...")
+    if (not tests.test_runner.main()):
+        print("Tests failed, quitting.")
+    print("Tests passed.")
 
     ## Build the README.rst
+    print("Converting README.md to a .rst for PyPI")
     generate_readme_rst()
 
     ## Assumes that python points to the correct python installation, and that
     ## twine is installed and accessible from the command line.
     if(pypi):
+        print("Building wheel for PyPI")
         setup_retval = os.system("python setup.py register sdist bdist_wheel")
     else:
+        print("Building wheel for test PyPI")
         setup_retval = os.system("python setup.py register -r testpypi sdist bdist_wheel")
     assert setup_retval == 0
 
     if(not no_deploy):
         ## Deploy to chosen repo
         if(pypi):
+            print("Deploying to PyPI")
             deploy_retval = os.system("twine upload dist/mail_to_sms-{0}*".format(version))
         else:
+            print("Deploying to test PyPI")
             deploy_retval = os.system("twine upload dist/mail_to_sms-{0}* -r testpypi".format(version))
         assert deploy_retval == 0
 
     ## Cleanup
+    print("Performing final cleanup.")
     os.remove("README.rst")
+
+    print("Done!")
 
 
 if(__name__ == "__main__") :

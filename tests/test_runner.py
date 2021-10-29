@@ -32,9 +32,17 @@ def build_test_suite(test_cases):
 	return suite
 
 
-def main():
+def main() -> bool:
 	runner = unittest.TextTestRunner()
-	runner.run(build_test_suite(discover_test_cases()))
+
+	try:
+		runner.run(build_test_suite(discover_test_cases()))
+		success = True
+	except:
+		success = False
+
+	return success
+
 
 if __name__ == "__main__":
 	main()
