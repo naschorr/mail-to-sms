@@ -3,8 +3,8 @@ from setuptools import setup
 ## Config
 MAJOR = 0
 MINOR = 3
-PATCH = 1
-with open("README.rst") as readme:
+PATCH = 2
+with open("README.rst", "r", encoding="utf-8", errors="ignore") as readme:
     LONG_DESCRIPTION = readme.read()
 
 ## Setuptools config
@@ -47,7 +47,7 @@ paramaters = dict(
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5"
+        "Programming Language :: Python :: 3.6"
     ],
 )
 

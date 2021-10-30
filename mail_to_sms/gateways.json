@@ -2,55 +2,86 @@
 	"_comment": "See https://en.wikipedia.org/wiki/SMS_gateway",
 	"gateways": [
 		{
-			"carrier": "alltel",
+			"carrier_names": [
+				"alltel"
+			],
 			"sms": "sms.alltelwireless.com",
 			"mms": "mms.alltelwireless.com"
 		},
 		{
-			"carrier": "att",
+			"carrier_names": [
+				"at&t",
+				"att"
+			],
 			"sms": "txt.att.net",
 			"mms": "mms.att.net"
 		},
 		{
-			"carrier": "boost mobile",
+			"carrier_names": [
+				"boost mobile",
+				"boost"
+			],
 			"sms": "sms.myboostmobile.com",
 			"mms": "myboostmobile.com"
 		},
 		{
-			"carrier": "cricket wireless",
+			"carrier_names": [
+				"cricket wireless",
+				"cricket"
+			],
 			"mms": "mms.cricketwireless.net"
 		},
 		{
-			"carrier": "metropcs",
+			"carrier_names": [
+				"metropcs"
+			],
 			"sms": "mymetropcs.com",
 			"mms": "mymetropcs.com"
 		},
 		{
-			"carrier": "project fi",
+			"carrier_names": [
+				"project fi",
+				"fi"
+			],
 			"mms": "msg.fi.google.com"
 		},
 		{
-			"carrier": "sprint",
+			"carrier_names": [
+				"sprint"
+			],
 			"sms": "messaging.sprintpcs.com",
 			"mms": "pm.sprint.com"
 		},
 		{
-			"carrier": "tmobile",
+			"carrier_names": [
+				"t-mobile",
+				"t mobile",
+				"tmobile"
+			],
 			"sms": "tmomail.net",
 			"mms": "tmomail.net"
 		},
 		{
-			"carrier": "us cellular",
+			"carrier_names": [
+				"us cellular"
+			],
 			"sms": "email.uscc.net",
 			"mms": "mms.uscc.net"
 		},
 		{
-			"carrier": "verizon wireless",
+			"carrier_names": [
+				"verizon wireless",
+				"verizon",
+				"vzw"
+			],
 			"sms": "vtext.com",
 			"mms": "vzwpix.com"
 		},
 		{
-			"carrier": "virgin mobile",
+			"carrier_names": [
+				"virgin mobile",
+				"virgin"
+			],
 			"sms": "vmobl.com",
 			"mms": "vmpix.com"
 		}
