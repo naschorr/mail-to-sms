@@ -63,23 +63,31 @@ class TestMailToSMS(unittest.TestCase):
         testTuples = [
             ## Good inputs
             ("alltel", True),
+            ("at&t", True),
             ("att", True),
             ("boost mobile", True),
+            ("boost", True),
             ("cricket wireless", True),
+            ("cricket", True),
             ("metropcs", True),
             ("project fi", True),
+            ("fi", True),
             ("sprint", True),
+            ("t-mobile", True),
             ("tmobile", True),
             ("us cellular", True),
             ("verizon wireless", True),
+            ("verizon", True),
+            ("vzw", True),
             ("virgin mobile", True),
+            ("virgin", True),
             ## Bad inputs
             (None, False),
             (12345, False),
             ("", False),
+            (" ", False),
             ("12345", False),
-            ("at&t", False),
-            ("t-mobile", False)
+            ("at t", False),
         ]
 
         for carrier, result in testTuples:
@@ -116,7 +124,6 @@ class TestMailToSMS(unittest.TestCase):
             {"carrier":12345, "sms":None, "mms":None},
             {"carrier":"", "sms":None, "mms":None},
             {"carrier":"not a carrier", "sms":None, "mms":None},
-            {"carrier":"at&t", "sms":None, "mms":None},
         ]
 
         ## Test without any config kwargs
