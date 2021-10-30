@@ -62,7 +62,7 @@ class MailToSMS:
     ## Config
     GATEWAYS_JSON_PATH = os.path.join(os.path.dirname(__file__), "gateways.json")
     GATEWAYS_KEY = "gateways"
-    CARRIER_KEY = "carrier"
+    CARRIER_NAMES_KEY = "carrier_names"
     SMS_KEY = "sms"
     MMS_KEY = "mms"
     QUIET_KEY = "quiet"
@@ -165,7 +165,7 @@ class MailToSMS:
         carrier = str(carrier).strip()
 
         for gateway in self.gateways:
-            if(gateway[self.CARRIER_KEY] == carrier):
+            if(carrier in gateway[self.CARRIER_NAMES_KEY]):
                 return True
         else:
             self._print_error(None, "'{0}' isn't a valid carrier.".format(carrier))
@@ -174,8 +174,8 @@ class MailToSMS:
 
     def _get_gateway(self, carrier):
         for gateway in self.gateways:
-            if(gateway[self.CARRIER_KEY] == carrier):
-                if(self.config.get("mms")):
+            if(carrier in gateway[self.CARRIER_NAMES_KEY]):
+                if(self.config.get(self.MMS_KEY)):
                     ## Return mms gateway if possible, else return the sms gateway
                     if(self.MMS_KEY in gateway):
                         return gateway[self.MMS_KEY]
