@@ -4,7 +4,7 @@ from setuptools import setup
 MAJOR = 0
 MINOR = 3
 PATCH = 2
-with open("README.rst") as readme:
+with open("README.rst", "r", encoding="utf-8", errors="ignore") as readme:
     LONG_DESCRIPTION = readme.read()
 
 ## Setuptools config
